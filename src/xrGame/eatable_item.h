@@ -20,6 +20,8 @@ protected:
 		u16 m_iMaxUses;
 		u16 m_iRemainingUses;
 		BOOL m_bRemoveAfterUse;
+		float m_fWeightFull;
+		float m_fWeightEmpty;
 
 public:
 							CEatableItem				();
@@ -42,4 +44,5 @@ public:
 		bool CanDelete() const { return m_bRemoveAfterUse==TRUE; };
 		virtual u16 GetMaxUses() const { return m_iMaxUses; };
 		virtual u16 GetRemainingUses() const { return m_iRemainingUses; };
+		void RecalculateUseProperties();
 };

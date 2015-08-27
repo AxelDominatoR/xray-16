@@ -45,11 +45,10 @@ void CEatableItem::Load(LPCSTR section)
 
 	m_iRemainingUses = m_iMaxUses = READ_IF_EXISTS( pSettings, r_u16, section, "max_uses", 1 );
 	m_bRemoveAfterUse = READ_IF_EXISTS( pSettings, r_bool, section, "remove_after_use", TRUE );
+	m_fWeightFull = m_weight;
+	m_fWeightEmpty = READ_IF_EXISTS( pSettings, r_float, section, "empty_weight", 0.0f );
 
-	if ( IsUsingCondition())
-	{
-		SetCondition(( float ) m_iRemainingUses / ( float ) m_iMaxUses );
-	}
+	RecalculateUseProperties();
 }
 
 
@@ -71,10 +70,7 @@ BOOL CEatableItem::net_Spawn				(CSE_Abstract* DC)
 {
 	if (!inherited::net_Spawn(DC)) return FALSE;
 
-	if ( IsUsingCondition())
-	{
-		SetCondition(( float ) m_iRemainingUses / ( float ) m_iMaxUses );
-	}
+	RecalculateUseProperties();
 
 	return TRUE;
 };
@@ -148,7 +144,20 @@ bool CEatableItem::UseBy (CEntityAlive* entity_alive)
 		m_iRemainingUses = 0;
 	}
 
-	SetCondition(( float ) m_iRemainingUses / ( float ) m_iMaxUses );
+	RecalculateUseProperties();
 
 	return true;
+}
+
+void CEatableItem::RecalculateUseProperties()
+{
+	if ( IsUsingCondition())
+	{
+		SetCondition(( float ) m_iRemainingUses / ( float ) m_iMaxUses );
+
+		float net_weight = m_fWeightFull - m_fWeightEmpty;
+		float use_weight = net_weight / m_iMaxUses;
+
+		m_weight = m_fWeightEmpty + ( m_iRemainingUses * use_weight );
+	}
 }
