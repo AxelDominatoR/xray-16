@@ -117,6 +117,7 @@ void CCustomOutfit::Load(LPCSTR section)
 
 	// Added by Axel, to enable optional condition use on any item
 	m_flags.set(FUsingCondition, READ_IF_EXISTS(pSettings, r_bool, section, "use_condition", TRUE));
+	m_flags.set(FIsRepairable, READ_IF_EXISTS(pSettings, r_bool, section, "repairable", TRUE));
 }
 
 void CCustomOutfit::ReloadBonesProtection()

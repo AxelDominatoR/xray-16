@@ -224,7 +224,11 @@ bool CUIInventoryUpgradeWnd::install_item( CInventoryItem& inv_item, bool can_up
 {
 	m_scheme_wnd->DetachAll();
 	m_back->DetachAll();
-	m_btn_repair->Enable( (inv_item.GetCondition() < 0.99f) );
+
+	if ( inv_item.IsRepairable())
+	{
+		m_btn_repair->Enable( (inv_item.GetCondition() < 0.99f) );
+	}
 
 	if ( !can_upgrade )
 	{

@@ -80,6 +80,7 @@ protected:
 								FInInterpolate		=(1<<10),
 								FIsQuestItem		=(1<<11),
 								FIsHelperItem		=(1<<12),
+								FIsRepairable		=(1<<13)
 	};
 
 	Flags16						m_flags;
@@ -100,6 +101,7 @@ public:
 	
 	virtual bool				Useful				() const;									// !!! Переопределить. (см. в Inventory.cpp)
 	virtual bool				IsUsingCondition() const { return ( m_flags.test( FUsingCondition ) > 0 ); };
+	virtual bool				IsRepairable() const { return ( m_flags.test( FIsRepairable ) > 0 ); };
 
 	virtual bool				Attach				(PIItem pIItem, bool b_send_event) {return false;}
 	virtual bool				Detach				(PIItem pIItem) {return false;}

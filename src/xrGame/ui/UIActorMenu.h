@@ -80,7 +80,7 @@ protected:
 	CUICellItem*				m_InfoCellItem;
 	u32							m_InfoCellItem_timer;
 	CUICellItem*				m_pCurrentCellItem;
-	CUICellItem* m_pCurrentConsumable;
+
 	CUICellItem*				m_upgrade_selected;
 	CUIPropertiesBox*			m_UIPropertiesBox;
 
@@ -192,6 +192,7 @@ private:
 	void						PropertiesBoxForPlaying		(PIItem item, bool& b_show);
 	void						PropertiesBoxForDrop		(CUICellItem* cell_item, PIItem item, bool& b_show);
 	void						PropertiesBoxForRepair		(PIItem item, bool& b_show);
+	void						PropertiesBoxForDonate		(PIItem item, bool& b_show); //Alundaio
 
 private:
 	void						clear_highlight_lists		();
@@ -244,8 +245,8 @@ protected:
 	void						CurModeToScript				();
 	void						RepairEffect_CurItem		();
 
-	void						SetCurrentItem				(CUICellItem* itm);
-	CUICellItem*				CurrentItem					();
+	//void						SetCurrentItem				(CUICellItem* itm); //Alundaio: Made public
+	//CUICellItem*				CurrentItem					();					//Alundaio: Made public
 	PIItem						CurrentIItem				();
 
 	void						InfoCurItem					(CUICellItem* cell_item); //on update item
@@ -340,7 +341,11 @@ public:
 
 	IC	UIHint*					get_hint_wnd				() { return m_hint_wnd; }
 
-	CUICellItem* GetCurrentConsumable(){ return m_pCurrentConsumable; };
-	void SetCurrentConsumable( CUICellItem* ci ){ m_pCurrentConsumable = ci; };
-	void RefreshConsumableCells();
+	//AxelDominator && Alundaio consumable use condition
+	void RefreshCurrentItemCell();
+	void SetCurrentItem(CUICellItem* itm);		//Alundaio: Made public
+	CUICellItem* CurrentItem();					//Alundaio: Made public
+	//-AxelDominator && Alundaio consumable use condition
+	void DonateCurrentItem(CUICellItem* cell_item); //Alundaio: Donate item via context menu while in trade menu
+
 }; // class CUIActorMenu

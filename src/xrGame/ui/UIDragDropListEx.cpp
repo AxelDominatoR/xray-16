@@ -4,7 +4,9 @@
 #include "object_broker.h"
 #include "UICellItem.h"
 #include "UICursor.h"
-
+//Alundaio
+#include "../Inventory.h" 
+//-Alundaio
 
 CUIDragItem* CUIDragDropListEx::m_drag_item = NULL;
 
@@ -541,16 +543,20 @@ bool CUICellContainer::AddSimilar(CUICellItem* itm)
 {
 	if(!m_pParentDragDropList->IsGrouping())	return false;
 
+	//Alundaio: Don't stack equipped items
+	PIItem	iitem = (PIItem)itm->m_pData;
+	if (iitem && iitem->m_pInventory && iitem->m_pInventory->ItemFromSlot(iitem->BaseSlot()) == iitem)
+		return false;
+	//-Alundaio
+
 	CUICellItem* i		= FindSimilar(itm);
-	R_ASSERT			(i!=itm);
-	R_ASSERT			(0==itm->ChildsCount());
-	if(i)
-	{	
+	if (i == NULL || i == itm || itm->ChildsCount() > 0)
+		return false;
+
 		i->PushChild			(itm);
 		itm->SetOwnerList		(m_pParentDragDropList);
-	}
 	
-	return (i!=NULL);
+	return true;
 }
 
 CUICellItem* CUICellContainer::FindSimilar(CUICellItem* itm)
@@ -562,7 +568,15 @@ CUICellItem* CUICellContainer::FindSimilar(CUICellItem* itm)
 #else
 		CUICellItem* i = (CUICellItem*)(*it);
 #endif
-		R_ASSERT		(i!=itm);
+		//Alundaio: Don't stack equipped items
+		PIItem	iitem = (PIItem)i->m_pData;
+		if (iitem && iitem->m_pInventory && iitem->m_pInventory->ItemFromSlot(iitem->BaseSlot()) == iitem)
+			continue;
+		//-Alundaio
+
+		if (i == itm)
+			continue;
+
 		if(i->EqualTo(itm))
 			return i;
 	}
@@ -922,6 +936,14 @@ void CUICellContainer::Draw()
 				else if ( ui_cell.m_item->m_select_armament )
 				{
 					select_mode = 3;
+				}
+				else 
+				{
+					//Alundaio: Highlight equipped items
+					PIItem	iitem = (PIItem)ui_cell.m_item->m_pData;
+					if (iitem && iitem->m_pInventory && iitem->m_pInventory->ItemFromSlot(iitem->BaseSlot()) == iitem)
+							select_mode = 3;
+					//-Alundaio:
 				}
 			}
 			
